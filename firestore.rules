@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['name', 'totalSpend'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 50
+        && data.totalSpend is number && data.totalSpend >= 0
+        && (data.plateCounts == null || data.plateCounts is map)
+        && (data.milestonesTriggered == null || data.milestonesTriggered is list)
+        && (data.updatedAt == null || data.updatedAt is timestamp);
+    }
+
+    match /users/{userId} {
+      allow read: if true; // Public leaderboard
+      allow create: if isSignedIn() && isValidId(userId) && isValidUser(request.resource.data);
+      allow update: if isSignedIn() && isValidId(userId) && isValidUser(request.resource.data)
+        && (
+          // Action: Update spending
+          (request.resource.data.diff(resource.data).affectedKeys().hasAny(['totalSpend', 'plateCounts', 'milestonesTriggered', 'updatedAt'])
+           && request.resource.data.name == resource.data.name)
+          ||
+          // Action: Reset (Total reset)
+          (request.resource.data.totalSpend == 0 && request.resource.data.plateCounts == {})
+        );
+      allow delete: if isSignedIn(); // Allow reset all (which might involve deleting or resetting)
+    }
+  }
+}

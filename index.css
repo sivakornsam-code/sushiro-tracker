@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+@theme {
+  --font-sans: "Outfit", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
+  --color-sushi-bg: #EAE3D9;
+  --color-sushi-card: #FDFBF7;
+  --color-sushi-text: #2D2825;
+  --color-sushi-sub: #8A7E6A;
+  --color-sushi-red: #E63946;
+  --color-sushi-border: #E0D8CC;
+}
+
+body {
+  background-color: var(--color-sushi-bg);
+  color: var(--color-sushi-text);
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+.sushi-pattern {
+  background-image: radial-gradient(#D9CBB7 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.plate-shadow {
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.plate-shadow:active {
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(4px);
+}
+
+.card-container {
+  box-shadow: 0 32px 64px -16px rgba(0,0,0,0.2);
+  border: 10px solid var(--color-sushi-text);
+}

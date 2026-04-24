@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user participating in the sushi spending competition",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The display name of the user"
+        },
+        "totalSpend": {
+          "type": "number",
+          "description": "The total amount spent in Baht"
+        },
+        "plateCounts": {
+          "type": "object",
+          "description": "The count of each plate color/type"
+        },
+        "milestonesTriggered": {
+          "type": "array",
+          "description": "List of milestones (e.g., 200, 500) already triggered"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the user last updated their spending"
+        }
+      },
+      "required": ["name", "totalSpend"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of users and their sushi spending data"
+    }
+  }
+}
